@@ -1,0 +1,5151 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "ExternController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Extern"
+        ]
+      }
+    },
+    "/partners": {
+      "post": {
+        "operationId": "PartnersController_createPartner",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePartnerRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePartnerResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "파트너 등록",
+        "tags": [
+          "Partners"
+        ]
+      }
+    },
+    "/partners/{partnerId}": {
+      "get": {
+        "operationId": "PartnersController_getPartnerById",
+        "parameters": [
+          {
+            "name": "partnerId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPartnerByIdResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "아이디로 파트너 조회",
+        "tags": [
+          "Partners"
+        ]
+      }
+    },
+    "/partners/duplicate-check": {
+      "get": {
+        "operationId": "PartnersController_duplicateCheck",
+        "parameters": [
+          {
+            "name": "keywordType",
+            "required": true,
+            "in": "query",
+            "description": "검사 키워드 타입",
+            "schema": {
+              "enum": [
+                "NAME",
+                "BUSINESS_NUMBER"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": true,
+            "in": "query",
+            "description": "키워드",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnersDuplicateCheckResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "파트너명 중복 체크",
+        "tags": [
+          "Partners"
+        ]
+      }
+    },
+    "/partner-admins/duplicate-check": {
+      "get": {
+        "operationId": "PartnerAdminsController_duplicateCheck",
+        "parameters": [
+          {
+            "name": "keywordType",
+            "required": true,
+            "in": "query",
+            "description": "중복 검사하는 항목",
+            "schema": {
+              "enum": [
+                "LOGIN_ID"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": true,
+            "in": "query",
+            "description": "중복 검사할 키워드",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerAdminsDuplicateCheckResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "PartnerAdmins"
+        ]
+      }
+    },
+    "/coupons": {
+      "get": {
+        "operationId": "CouponsController_getCoupons",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "페이지 크기",
+            "schema": {
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "keywordType",
+            "required": false,
+            "in": "query",
+            "description": "검색 키워드 타입 (COUPON_NAME, COUPON_ID 중 하나)",
+            "schema": {
+              "example": "COUPON_NAME",
+              "enum": [
+                "COUPON_NAME",
+                "COUPON_ID"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "검색 키워드. keywordType이 COUPON_NAME이면 문자열, COUPON_ID이면 숫자여야 합니다.",
+            "schema": {
+              "example": "5천원 할인권 / 13132",
+              "type": "string"
+            }
+          },
+          {
+            "name": "issueStatus",
+            "required": false,
+            "in": "query",
+            "description": "발급 상태",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "ISSUING",
+                  "STOPPED",
+                  "ENDED"
+                ]
+              }
+            }
+          },
+          {
+            "name": "couponType",
+            "required": false,
+            "in": "query",
+            "description": "쿠폰 타입",
+            "schema": {
+              "enum": [
+                "PRODUCT",
+                "ORDER"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchPeriodType",
+            "required": false,
+            "in": "query",
+            "description": "검색하는 기간의 기준 일자",
+            "schema": {
+              "enum": [
+                "ISSUE_START_DATE",
+                "REGISTER_DATE"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "기간 - 시작일",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "기간 - 종료일",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCouponsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "쿠폰 리스트 조회",
+        "tags": [
+          "Coupons"
+        ]
+      },
+      "post": {
+        "operationId": "CouponsController_issueCoupon",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IssueCouponRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueCouponResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "쿠폰 발급",
+        "tags": [
+          "Coupons"
+        ]
+      }
+    },
+    "/coupons/{couponId}": {
+      "get": {
+        "operationId": "CouponsController_getCoupon",
+        "parameters": [
+          {
+            "name": "couponId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCouponResponseDto"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "해당 쿠폰이 조회되지 않습니다"
+          }
+        },
+        "summary": "쿠폰 조회",
+        "tags": [
+          "Coupons"
+        ]
+      }
+    },
+    "/coupons/products/{productId}": {
+      "post": {
+        "operationId": "CouponsController_issueCouponsForProduct",
+        "parameters": [
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkIssueCouponRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueCouponsForProductResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "상품에 적용 가능한 쿠폰 일괄 다운로드 받기 (shopby: /coupons/products/{productNo}/download)",
+        "tags": [
+          "Coupons"
+        ]
+      }
+    },
+    "/coupons/exhibitions/{exhibitionId}": {
+      "post": {
+        "operationId": "CouponsController_issueExhibitionCoupons",
+        "parameters": [
+          {
+            "name": "exhibitionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkIssueCouponRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueExhibitionCouponsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "기획전 쿠폰 일괄 다운로드 받기 (shopby: /coupons/events/{eventNo}/download)",
+        "tags": [
+          "Coupons"
+        ]
+      }
+    },
+    "/coupons/issued-coupons/{issuedCouponId}": {
+      "get": {
+        "operationId": "CouponsController_getIssuedCoupon",
+        "parameters": [
+          {
+            "name": "issuedCouponId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetIssuedCouponResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "발급된 쿠폰 조회",
+        "tags": [
+          "Coupons"
+        ]
+      }
+    },
+    "/coupons/issued-coupons/{issuedCouponId}/cancel": {
+      "put": {
+        "operationId": "CouponsController_cancelCoupon",
+        "parameters": [
+          {
+            "name": "issuedCouponId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "summary": "쿠폰 취소",
+        "tags": [
+          "Coupons"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UsersController_getUsers",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "페이지 크기",
+            "schema": {
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "keywordType",
+            "required": false,
+            "in": "query",
+            "description": "검색 키워드 타입 (EXTERNAL_ID, ADDITIONAL_USER_ID 중 하나)",
+            "schema": {
+              "example": "ADDITIONAL_USER_ID",
+              "enum": [
+                "EXTERNAL_ID",
+                "ADDITIONAL_USER_ID"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "검색 키워드",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": false,
+            "in": "query",
+            "description": "조회 시작 일자",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": false,
+            "in": "query",
+            "description": "조회 종료 일자",
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "searchDateType",
+            "required": false,
+            "in": "query",
+            "description": "조회 일자 기준(해당 값이 있어야지만 endDate, startDate 기준으로 검색함 없으면 검색 조건에 미포함)",
+            "schema": {
+              "enum": [
+                "UPDATED_AT"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "userGroupIds",
+            "required": false,
+            "in": "query",
+            "description": "조회",
+            "schema": {
+              "example": [
+                1,
+                2,
+                3
+              ],
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUsersResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "유저 목록 조회",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "operationId": "UsersController_getUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "유저 조회",
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_deleteUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "유저 탈퇴",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/externalId/{externalId}": {
+      "get": {
+        "operationId": "UsersController_getUserByExternalId",
+        "parameters": [
+          {
+            "name": "externalId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "유저 조회",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{userId}/order-exists": {
+      "get": {
+        "operationId": "UsersController_checkUserOrderExists",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckUserOrderExistsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/orders/{orderId}": {
+      "get": {
+        "operationId": "OrdersController_getById",
+        "parameters": [
+          {
+            "name": "orderId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "주문 상세 조회",
+        "tags": [
+          "Orders"
+        ]
+      }
+    },
+    "/points": {
+      "post": {
+        "operationId": "PointsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePointRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "포인트 로그 생성 API",
+        "tags": [
+          "Points"
+        ]
+      }
+    },
+    "/products": {
+      "get": {
+        "operationId": "ProductsController_searchProducts",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "페이지 크기",
+            "schema": {
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "includedCategoryIds",
+            "required": false,
+            "in": "query",
+            "description": "배제할 하위 전시 카테고리 ID 배열",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "excludedCategoryIds",
+            "required": false,
+            "in": "query",
+            "description": "배제할 하위 전시 카테고리 ID 배열",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "description": "검색어(여러 검색어일 경우 space 로 구분 - AND 연산 처리)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "salePrice",
+            "required": false,
+            "in": "query",
+            "description": "판매가, salePriceCondition 과 같이 보내주세요. \n      salePriceCondition 이 BETWEEN 일 경우 두 개의 값을 , 로 구분하여 요청 주세요 나머지 조건들은 1개의 값만 보내주세요.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "salePriceCondition",
+            "required": false,
+            "in": "query",
+            "description": "판매가 검색 조건",
+            "schema": {
+              "enum": [
+                "GT",
+                "LT",
+                "GTE",
+                "LTE",
+                "EQ",
+                "BETWEEN"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludedProductIds",
+            "required": false,
+            "in": "query",
+            "description": "제외할 상품 번호",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "includedProductIds",
+            "required": false,
+            "in": "query",
+            "description": "추가할 상품 번호",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "saleStatus",
+            "required": false,
+            "in": "query",
+            "description": "판매 상태",
+            "schema": {
+              "default": "IN_SALE",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "IN_SALE",
+                  "PENDING"
+                ]
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "description": "정렬 조건",
+            "schema": {
+              "default": "POPULARITY",
+              "enum": [
+                "POPULARITY",
+                "SALE_PRICE",
+                "RECENT_PRODUCT"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderDirection",
+            "required": false,
+            "in": "query",
+            "description": "정렬 방향",
+            "schema": {
+              "default": "DESC",
+              "enum": [
+                "ASC",
+                "DESC"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "조건에 따라 조회된 상품 정보",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllProductsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "조건 기반 상품 리스트 조회",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/statistics": {
+      "get": {
+        "operationId": "ProductsController_getProductStatistics",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "페이지 크기",
+            "schema": {
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "productIds",
+            "required": true,
+            "in": "query",
+            "description": "추가할 상품 번호",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "name": "startDate",
+            "required": true,
+            "in": "query",
+            "description": "기간의 시작 날짜",
+            "schema": {
+              "format": "date-time",
+              "example": "1970-01-01T00:00:00.000Z",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": true,
+            "in": "query",
+            "description": "기간의 종료 날짜",
+            "schema": {
+              "format": "date-time",
+              "example": "1970-01-01T00:00:00.000Z",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProductStatisticsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "상품 통계 조회",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/list": {
+      "get": {
+        "operationId": "ProductsController_getProductList",
+        "parameters": [
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "description": "커서 id (첫 페이지는 커서 없이 요청)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": true,
+            "in": "query",
+            "description": "페이지 크기",
+            "schema": {
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "periodType",
+            "required": true,
+            "in": "query",
+            "description": "기간 타입 (CREATE: 생성일 기준, UPDATE: 수정일 기준)",
+            "schema": {
+              "example": "CREATE",
+              "enum": [
+                "CREATE",
+                "UPDATE"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "required": true,
+            "in": "query",
+            "description": "기간의 시작 날짜",
+            "schema": {
+              "format": "date-time",
+              "example": "1970-01-01T00:00:00.000Z",
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "required": true,
+            "in": "query",
+            "description": "기간의 종료 날짜",
+            "schema": {
+              "format": "date-time",
+              "example": "1970-01-01T00:00:00.000Z",
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "required": true,
+            "in": "query",
+            "description": "정렬 방향 id 기준",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchProductResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "상품 리스트 조회",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/{productId}": {
+      "get": {
+        "operationId": "ProductsController_getProductWithoutOption",
+        "parameters": [
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "모든 상품 정보 - 옵션 제외",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetProductWithoutOptionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "상품 상세 조회",
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/exhibitions/{id}": {
+      "get": {
+        "operationId": "ExhibitionsController_getById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "saleStatus",
+            "required": false,
+            "in": "query",
+            "description": "판매 상태",
+            "schema": {
+              "default": "IN_SALE",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "IN_SALE",
+                  "PENDING"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetExhibitionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api-key": [],
+            "tenant-id": []
+          }
+        ],
+        "summary": "기획전 상세 조회",
+        "tags": [
+          "Exhibitions"
+        ]
+      }
+    },
+    "/exhibitions/tabs/{exhibitionTabId}": {
+      "get": {
+        "operationId": "ExhibitionsController_getExhibitionTabWithProduct",
+        "parameters": [
+          {
+            "name": "exhibitionTabId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "페이지 번호",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "description": "페이지 크기",
+            "schema": {
+              "default": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": true,
+            "in": "query",
+            "description": "정렬 순서",
+            "schema": {
+              "enum": [
+                "SALE_START_DATE",
+                "POPULARITY",
+                "SALE_PRICE",
+                "SEQUENCE"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortDirection",
+            "required": true,
+            "in": "query",
+            "description": "정렬 방향",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "saleStatuses",
+            "required": false,
+            "in": "query",
+            "description": "판매 상태",
+            "schema": {
+              "example": "IN_SALE",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "IN_SALE",
+                  "SALE_ENDED"
+                ]
+              }
+            }
+          },
+          {
+            "name": "soldOutIncluded",
+            "required": true,
+            "in": "query",
+            "description": "품절 상품 포함 여부",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "hasExhibitionTabCount",
+            "required": true,
+            "in": "query",
+            "description": "기획전 탭 카운트 포함 여부",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "hasProductOption",
+            "required": true,
+            "in": "query",
+            "description": "상품 옵션 포함 여부",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetExhibitionTabWithProductsResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api-key": [],
+            "tenant-id": []
+          }
+        ],
+        "summary": "기획전 탭 및 연관 상품 조회",
+        "tags": [
+          "Exhibitions"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Nudge commerce",
+    "description": "The nudge commerce extern API description",
+    "version": "0.1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "api-key": {
+        "name": "api-key",
+        "type": "apiKey",
+        "in": "header"
+      },
+      "tenant-id": {
+        "name": "tenant-id",
+        "type": "apiKey",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "CreatePartnerBusinessRequestDto": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "사업자 등록 번호"
+          },
+          "type": {
+            "type": "string",
+            "description": "사업 유형"
+          },
+          "item": {
+            "type": "string",
+            "description": "사업 품목"
+          }
+        },
+        "required": [
+          "number",
+          "type",
+          "item"
+        ]
+      },
+      "CreatePartnerRepresentativeRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "대표자 이름"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "대표자 연락처"
+          },
+          "email": {
+            "type": "string",
+            "description": "대표자 이메일"
+          }
+        },
+        "required": [
+          "name",
+          "phoneNumber",
+          "email"
+        ]
+      },
+      "CreatePartnerCustomerServiceRequestDto": {
+        "type": "object",
+        "properties": {
+          "managerName": {
+            "type": "string",
+            "description": "고객 서비스 관리자 이름",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "고객 서비스 연락처"
+          },
+          "email": {
+            "type": "string",
+            "description": "고객 서비스 이메일",
+            "nullable": true
+          },
+          "operatingHours": {
+            "type": "string",
+            "description": "고객 서비스 운영 시간",
+            "nullable": true
+          }
+        },
+        "required": [
+          "managerName",
+          "phoneNumber",
+          "email",
+          "operatingHours"
+        ]
+      },
+      "CreatePartnerOperatorRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "운영자 이름"
+          },
+          "position": {
+            "type": "string",
+            "description": "운영자 직급"
+          },
+          "job": {
+            "type": "string",
+            "description": "운영자 직책",
+            "nullable": true
+          },
+          "department": {
+            "type": "string",
+            "description": "운영자 소속부서",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "운영자 전화번호"
+          },
+          "mobileNumber": {
+            "type": "string",
+            "description": "운영자 휴대폰 번호"
+          },
+          "email": {
+            "type": "string",
+            "description": "운영자 이메일"
+          }
+        },
+        "required": [
+          "name",
+          "position",
+          "job",
+          "department",
+          "phoneNumber",
+          "mobileNumber",
+          "email"
+        ]
+      },
+      "CreatePartnerSettlementManagerRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "회계 담당자 이름"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "회계 담당자 전화번호"
+          },
+          "email": {
+            "type": "string",
+            "description": "회계 담당자 이메일"
+          },
+          "department": {
+            "type": "string",
+            "description": "회계 담당자 부서",
+            "nullable": true
+          },
+          "job": {
+            "type": "string",
+            "description": "회계 담당자 직책",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "phoneNumber",
+          "email",
+          "department",
+          "job"
+        ]
+      },
+      "CreatePartnerAccountRequestDto": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string",
+            "description": "계좌번호"
+          },
+          "bank": {
+            "type": "string",
+            "enum": [
+              "ANONYMOUS",
+              "KDB",
+              "IBK",
+              "KB",
+              "KEB",
+              "SUHYUP",
+              "KEXIM",
+              "NH",
+              "NHLOCAL",
+              "WOORI",
+              "SC",
+              "CITY",
+              "DAEGU",
+              "PUSAN",
+              "GWANGJU",
+              "JEJU",
+              "JEONBUK",
+              "GYEONGNAM",
+              "KFCC",
+              "CU",
+              "SANGHO",
+              "HSBC",
+              "DEUTSCHE",
+              "MIZUHO",
+              "UFJ",
+              "NFCF",
+              "EPOST",
+              "KEBHANA",
+              "SHINHAN",
+              "KBANK",
+              "KAKAO",
+              "TOSS",
+              "YUANTA",
+              "KBSEC",
+              "MIRAE",
+              "MIRAEDAEWOO",
+              "SAMSUNG",
+              "HANKOOK",
+              "NH_INVEST",
+              "KYOBO",
+              "HI_INVEST",
+              "HMC_INVEST",
+              "KIWOOM",
+              "EBEST",
+              "SK",
+              "DAISHIN",
+              "SOLOMON_INVEST",
+              "HANHWA",
+              "HANA_INVEST",
+              "SHINHAN_INVEST",
+              "DONGBU",
+              "EUGENE_INVEST",
+              "MERITZ_COMPREHENSIVE",
+              "BOOKOOK",
+              "SHINYOUNG",
+              "CAPE",
+              "SMBC",
+              "RESONA"
+            ],
+            "description": "은행명"
+          },
+          "anonymousBank": {
+            "type": "string",
+            "description": "직접 입력한 은행명",
+            "nullable": true
+          },
+          "holderName": {
+            "type": "string",
+            "description": "예금주 이름"
+          }
+        },
+        "required": [
+          "number",
+          "bank",
+          "anonymousBank",
+          "holderName"
+        ]
+      },
+      "CreatePartnerPersonalInfoManagerRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "개인정보 관리 책임자 이름"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "개인정보 관리 책임자 전화번호"
+          }
+        },
+        "required": [
+          "name",
+          "phoneNumber"
+        ]
+      },
+      "CreatePartnerPartnerAdminRequestDto": {
+        "type": "object",
+        "properties": {
+          "loginId": {
+            "type": "string",
+            "description": "파트너 계정 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "파트너 계정 사용자 이름"
+          },
+          "department": {
+            "type": "string",
+            "description": "파트너 계정 사용자 부서"
+          },
+          "email": {
+            "type": "string",
+            "description": "파트너 계정 사용자 이메일"
+          },
+          "password": {
+            "type": "string",
+            "description": "파트너 계정 비밀번호"
+          }
+        },
+        "required": [
+          "loginId",
+          "name",
+          "department",
+          "email",
+          "password"
+        ]
+      },
+      "CreatePartnerRequestDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "파트너 이름"
+          },
+          "tradeStatus": {
+            "type": "string",
+            "enum": [
+              "TRADING",
+              "STOPPED"
+            ],
+            "description": "파트너의 거래 상태"
+          },
+          "merchandiserId": {
+            "type": "number",
+            "description": "상품 담당자 ID"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "회사명"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "우편번호"
+          },
+          "address": {
+            "type": "string",
+            "description": "주소"
+          },
+          "addressDetail": {
+            "type": "string",
+            "description": "상세 주소",
+            "nullable": true
+          },
+          "operationType": {
+            "type": "string",
+            "enum": [
+              "BRAND",
+              "MANUFACTURER",
+              "IMPORTER",
+              "VENDOR"
+            ],
+            "description": "파트너 운영 유형"
+          },
+          "taxType": {
+            "type": "string",
+            "enum": [
+              "NORMAL_TAX_PAYER",
+              "TEMPORARY_TAX_PAYER",
+              "VAT_EXEMPT_BUSINESS",
+              "CORPORATE_BUSINESS",
+              "VAT_EXEMPT_CORPORATE_BUSINESS",
+              "ETC"
+            ],
+            "description": "세금 유형"
+          },
+          "mailOrderSalesRegistrationNumber": {
+            "type": "string",
+            "description": "사업자 등록 번호"
+          },
+          "storeUrl": {
+            "type": "string",
+            "description": "온라인 쇼핑몰 URL"
+          },
+          "business": {
+            "description": "사업자 등록 번호",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePartnerBusinessRequestDto"
+              }
+            ]
+          },
+          "representative": {
+            "description": "대표자 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePartnerRepresentativeRequestDto"
+              }
+            ]
+          },
+          "customerService": {
+            "description": "고객 서비스 관리자 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePartnerCustomerServiceRequestDto"
+              }
+            ]
+          },
+          "operator": {
+            "description": "운영자 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePartnerOperatorRequestDto"
+              }
+            ]
+          },
+          "settlementManager": {
+            "description": "회계 담당자 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePartnerSettlementManagerRequestDto"
+              }
+            ]
+          },
+          "account": {
+            "description": "계좌 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePartnerAccountRequestDto"
+              }
+            ]
+          },
+          "personalInfoManager": {
+            "description": "개인정보 관리 책임자 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePartnerPersonalInfoManagerRequestDto"
+              }
+            ]
+          },
+          "admin": {
+            "description": "파트너 어드민 계정 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CreatePartnerPartnerAdminRequestDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "tradeStatus",
+          "merchandiserId",
+          "companyName",
+          "zipCode",
+          "address",
+          "addressDetail",
+          "operationType",
+          "taxType",
+          "mailOrderSalesRegistrationNumber",
+          "storeUrl",
+          "business",
+          "representative",
+          "customerService",
+          "operator",
+          "settlementManager",
+          "account",
+          "personalInfoManager",
+          "admin"
+        ]
+      },
+      "CreatePartnerResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "파트너 아이디"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "GetPartnerByIdMerchandiserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "상품 담당자 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "상품 담당자 이름"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "GetPartnerByIdResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "파트너의 고유 ID"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "테넌트 ID"
+          },
+          "loginId": {
+            "type": "string",
+            "description": "파트너 어드민 계정 로그인 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "파트너 이름"
+          },
+          "merchandiser": {
+            "description": "상품 담당자 이름",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetPartnerByIdMerchandiserResponseDto"
+              }
+            ]
+          },
+          "tradeStatus": {
+            "type": "string",
+            "enum": [
+              "TRADING",
+              "STOPPED"
+            ],
+            "description": "파트너의 거래 상태",
+            "nullable": true
+          },
+          "tradeStartedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "파트너의 거래 시작일"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "회사명"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "우편번호"
+          },
+          "address": {
+            "type": "string",
+            "description": "주소"
+          },
+          "addressDetail": {
+            "type": "string",
+            "description": "상세 주소",
+            "nullable": true
+          },
+          "businessNumber": {
+            "type": "string",
+            "description": "사업자 등록 번호"
+          },
+          "operationType": {
+            "type": "string",
+            "enum": [
+              "BRAND",
+              "MANUFACTURER",
+              "IMPORTER",
+              "VENDOR"
+            ],
+            "description": "파트너 운영 유형",
+            "nullable": true
+          },
+          "taxType": {
+            "type": "string",
+            "enum": [
+              "NORMAL_TAX_PAYER",
+              "TEMPORARY_TAX_PAYER",
+              "VAT_EXEMPT_BUSINESS",
+              "CORPORATE_BUSINESS",
+              "VAT_EXEMPT_CORPORATE_BUSINESS",
+              "ETC"
+            ],
+            "description": "세금 유형"
+          },
+          "businessType": {
+            "type": "string",
+            "description": "사업 유형"
+          },
+          "businessItem": {
+            "type": "string",
+            "description": "사업 품목"
+          },
+          "representativeName": {
+            "type": "string",
+            "description": "대표자 이름"
+          },
+          "representativePhoneNumber": {
+            "type": "string",
+            "description": "대표자 연락처"
+          },
+          "representativeEmail": {
+            "type": "string",
+            "description": "대표자 이메일"
+          },
+          "mailOrderSalesRegistrationNumber": {
+            "type": "string",
+            "description": "통신판매업 등록 번호"
+          },
+          "storeUrl": {
+            "type": "string",
+            "description": "온라인 쇼핑몰 URL"
+          },
+          "operatorName": {
+            "type": "string",
+            "description": "운영자 이름"
+          },
+          "operatorPosition": {
+            "type": "string",
+            "description": "운영자 직급"
+          },
+          "operatorJob": {
+            "type": "string",
+            "description": "운영자 직책",
+            "nullable": true
+          },
+          "operatorDepartment": {
+            "type": "string",
+            "description": "운영자 소속부서",
+            "nullable": true
+          },
+          "operatorPhoneNumber": {
+            "type": "string",
+            "description": "운영자 전화번호"
+          },
+          "operatorMobileNumber": {
+            "type": "string",
+            "description": "운영자 휴대폰 번호"
+          },
+          "operatorEmail": {
+            "type": "string",
+            "description": "운영자 이메일"
+          },
+          "settlementManagerName": {
+            "type": "string",
+            "description": "회계 담당자 이름"
+          },
+          "settlementManagerPhoneNumber": {
+            "type": "string",
+            "description": "회계 담당자 전화번호"
+          },
+          "settlementManagerEmail": {
+            "type": "string",
+            "description": "회계 담당자 이메일"
+          },
+          "settlementManagerDepartment": {
+            "type": "string",
+            "description": "회계 담당자 부서",
+            "nullable": true
+          },
+          "settlementManagerJob": {
+            "type": "string",
+            "description": "회계 담당자 직책",
+            "nullable": true
+          },
+          "settlementAccountNumber": {
+            "type": "string",
+            "description": "계좌번호"
+          },
+          "settlementAccountBank": {
+            "type": "string",
+            "description": "은행명",
+            "enum": [
+              "ANONYMOUS",
+              "KDB",
+              "IBK",
+              "KB",
+              "KEB",
+              "SUHYUP",
+              "KEXIM",
+              "NH",
+              "NHLOCAL",
+              "WOORI",
+              "SC",
+              "CITY",
+              "DAEGU",
+              "PUSAN",
+              "GWANGJU",
+              "JEJU",
+              "JEONBUK",
+              "GYEONGNAM",
+              "KFCC",
+              "CU",
+              "SANGHO",
+              "HSBC",
+              "DEUTSCHE",
+              "MIZUHO",
+              "UFJ",
+              "NFCF",
+              "EPOST",
+              "KEBHANA",
+              "SHINHAN",
+              "KBANK",
+              "KAKAO",
+              "TOSS",
+              "YUANTA",
+              "KBSEC",
+              "MIRAE",
+              "MIRAEDAEWOO",
+              "SAMSUNG",
+              "HANKOOK",
+              "NH_INVEST",
+              "KYOBO",
+              "HI_INVEST",
+              "HMC_INVEST",
+              "KIWOOM",
+              "EBEST",
+              "SK",
+              "DAISHIN",
+              "SOLOMON_INVEST",
+              "HANHWA",
+              "HANA_INVEST",
+              "SHINHAN_INVEST",
+              "DONGBU",
+              "EUGENE_INVEST",
+              "MERITZ_COMPREHENSIVE",
+              "BOOKOOK",
+              "SHINYOUNG",
+              "CAPE",
+              "SMBC",
+              "RESONA"
+            ]
+          },
+          "anonymousBank": {
+            "type": "string",
+            "description": "직접 입력 시에 은행명",
+            "nullable": true
+          },
+          "settlementAccountHolderName": {
+            "type": "string",
+            "description": "예금주 이름"
+          },
+          "personalInfoManagerName": {
+            "type": "string",
+            "description": "개인정보 관리 책임자 이름"
+          },
+          "personalInfoManagerPhoneNumber": {
+            "type": "string",
+            "description": "개인정보 관리 책임자 전화번호"
+          },
+          "customerServiceManagerName": {
+            "type": "string",
+            "description": "고객 서비스 관리자 이름",
+            "nullable": true
+          },
+          "customerServicePhoneNumber": {
+            "type": "string",
+            "description": "고객 서비스 연락처"
+          },
+          "customerServiceEmail": {
+            "type": "string",
+            "description": "고객 서비스 이메일",
+            "nullable": true
+          },
+          "customerServiceOperatingHours": {
+            "type": "string",
+            "description": "고객 서비스 운영 시간",
+            "nullable": true
+          },
+          "hasProduct": {
+            "type": "boolean",
+            "description": "상품 등록 여부"
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "loginId",
+          "name",
+          "merchandiser",
+          "tradeStatus",
+          "tradeStartedAt",
+          "companyName",
+          "zipCode",
+          "address",
+          "addressDetail",
+          "businessNumber",
+          "operationType",
+          "taxType",
+          "businessType",
+          "businessItem",
+          "representativeName",
+          "representativePhoneNumber",
+          "representativeEmail",
+          "mailOrderSalesRegistrationNumber",
+          "storeUrl",
+          "operatorName",
+          "operatorPosition",
+          "operatorJob",
+          "operatorDepartment",
+          "operatorPhoneNumber",
+          "operatorMobileNumber",
+          "operatorEmail",
+          "settlementManagerName",
+          "settlementManagerPhoneNumber",
+          "settlementManagerEmail",
+          "settlementManagerDepartment",
+          "settlementManagerJob",
+          "settlementAccountNumber",
+          "settlementAccountBank",
+          "anonymousBank",
+          "settlementAccountHolderName",
+          "personalInfoManagerName",
+          "personalInfoManagerPhoneNumber",
+          "customerServiceManagerName",
+          "customerServicePhoneNumber",
+          "customerServiceEmail",
+          "customerServiceOperatingHours",
+          "hasProduct"
+        ]
+      },
+      "PartnersDuplicateCheckResponseDto": {
+        "type": "object",
+        "properties": {
+          "isDuplicate": {
+            "type": "boolean",
+            "description": "중복 여부"
+          }
+        },
+        "required": [
+          "isDuplicate"
+        ]
+      },
+      "PartnerAdminsDuplicateCheckResponseDto": {
+        "type": "object",
+        "properties": {
+          "isDuplicate": {
+            "type": "boolean",
+            "description": "중복 여부"
+          }
+        },
+        "required": [
+          "isDuplicate"
+        ]
+      },
+      "CouponsResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "쿠폰 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "쿠폰명"
+          },
+          "issueStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ISSUING",
+              "STOPPED",
+              "ENDED"
+            ],
+            "description": "쿠폰 발급 상태"
+          },
+          "issueType": {
+            "type": "string",
+            "enum": [
+              "DOWNLOAD",
+              "AUTO"
+            ],
+            "description": "쿠폰 발급 타입"
+          },
+          "discountType": {
+            "type": "string",
+            "enum": [
+              "PERCENTAGE",
+              "AMOUNT"
+            ],
+            "description": "쿠폰 할인 타입"
+          },
+          "discountAmount": {
+            "type": "number",
+            "description": "할인량, 정률일 때는 소수점으로 전달(0.03) / 정액일 때는 할인금액 그대로 전달"
+          },
+          "maxDiscountAmount": {
+            "type": "number",
+            "description": "최대 할인 가능 금액",
+            "nullable": true
+          },
+          "minApplicablePrice": {
+            "type": "number",
+            "description": "최소 적용 금액",
+            "nullable": true
+          },
+          "maxApplicablePrice": {
+            "type": "number",
+            "description": "최대 적용 금액",
+            "nullable": true
+          },
+          "mallBurdenRate": {
+            "type": "number",
+            "description": "쇼핑몰 부담률"
+          },
+          "issueCount": {
+            "type": "number",
+            "description": "발급된 쿠폰 수량"
+          },
+          "normalIssueCount": {
+            "type": "number",
+            "description": "일반 발급 수량"
+          },
+          "adminIssueCount": {
+            "type": "number",
+            "description": "어드민 발급 수량"
+          },
+          "totalLimit": {
+            "type": "number",
+            "description": "총 발급 수량 제한",
+            "nullable": true
+          },
+          "discountTarget": {
+            "type": "string",
+            "description": "쿠폰 할인 대상",
+            "enum": [
+              "ALL",
+              "STANDARD_CATEGORY",
+              "PARTNER",
+              "PRODUCT"
+            ]
+          },
+          "usedCount": {
+            "type": "number",
+            "description": "사용된 쿠폰 수량"
+          },
+          "withdrawalCount": {
+            "type": "number",
+            "description": "철회 수량"
+          },
+          "issueStartDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "쿠폰 발급 시작일"
+          },
+          "issueEndDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "쿠폰 발급 종료일"
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "생성자"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "생성 일시"
+          },
+          "lastUpdatedBy": {
+            "type": "string",
+            "description": "마지막 수정자"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "마지막 수정 일시"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "issueStatus",
+          "issueType",
+          "discountType",
+          "discountAmount",
+          "maxDiscountAmount",
+          "minApplicablePrice",
+          "maxApplicablePrice",
+          "mallBurdenRate",
+          "issueCount",
+          "normalIssueCount",
+          "adminIssueCount",
+          "totalLimit",
+          "discountTarget",
+          "usedCount",
+          "withdrawalCount",
+          "issueStartDate",
+          "issueEndDate",
+          "createdBy",
+          "createdAt",
+          "lastUpdatedBy",
+          "updatedAt"
+        ]
+      },
+      "GetCouponsResponseDto": {
+        "type": "object",
+        "properties": {
+          "coupons": {
+            "description": "쿠폰 리스트",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CouponsResponseDto"
+            }
+          },
+          "totalCount": {
+            "type": "number",
+            "description": "총 쿠폰 수"
+          }
+        },
+        "required": [
+          "coupons",
+          "totalCount"
+        ]
+      },
+      "GetCouponResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "쿠폰 ID"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "테넌트 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "쿠폰명"
+          },
+          "issueType": {
+            "type": "string",
+            "enum": [
+              "DOWNLOAD",
+              "AUTO"
+            ],
+            "description": "쿠폰 발급 타입"
+          },
+          "issueStartDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "쿠폰 발급 시작일"
+          },
+          "issueEndDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "쿠폰 발급 종료일"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "PRODUCT",
+              "ORDER"
+            ],
+            "description": "쿠폰 구분"
+          },
+          "discountType": {
+            "type": "string",
+            "enum": [
+              "PERCENTAGE",
+              "AMOUNT"
+            ],
+            "description": "쿠폰 할인 타입"
+          },
+          "discountAmount": {
+            "type": "number",
+            "description": "할인량, 정률일 때는 소수점으로 전달(0.03) / 정액일 때는 할인금액 그대로 전달"
+          },
+          "maxDiscountAmount": {
+            "type": "object",
+            "description": "최대 할인 금액 (정률일 때)",
+            "nullable": true
+          },
+          "usagePeriodType": {
+            "type": "string",
+            "description": "쿠폰 사용 기한 종류",
+            "enum": [
+              "SINCE_ISSUE_DATE",
+              "END_DATE"
+            ]
+          },
+          "expirationTypeAfterIssueDate": {
+            "type": "string",
+            "enum": [
+              "TODAY",
+              "DAYS",
+              "LAST_DAY_OF_MONTH"
+            ],
+            "nullable": true,
+            "description": "발급 후 종료 기간 타입"
+          },
+          "daysValidAfterIssue": {
+            "type": "number",
+            "description": "발급일 기준 유효 기간",
+            "nullable": true
+          },
+          "expireDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "쿠폰 만료일",
+            "nullable": true
+          },
+          "issueEndedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "발급 종료 일시",
+            "nullable": true
+          },
+          "discountTarget": {
+            "type": "string",
+            "enum": [
+              "ALL",
+              "STANDARD_CATEGORY",
+              "PARTNER",
+              "PRODUCT"
+            ],
+            "description": "쿠폰 할인 대상"
+          },
+          "discountTargetIds": {
+            "description": "쿠폰 할인 대상 id (전체이면 null)",
+            "nullable": true,
+            "items": {
+              "type": "array"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "name",
+          "issueType",
+          "issueStartDate",
+          "issueEndDate",
+          "type",
+          "discountType",
+          "discountAmount",
+          "maxDiscountAmount",
+          "usagePeriodType",
+          "expirationTypeAfterIssueDate",
+          "daysValidAfterIssue",
+          "expireDate",
+          "issueEndedAt",
+          "discountTarget"
+        ]
+      },
+      "IssueCouponRequestDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "description": "사용자 ID"
+          },
+          "couponId": {
+            "type": "number",
+            "description": " 쿠폰 ID"
+          },
+          "issueReason": {
+            "type": "string",
+            "description": "쿠폰 지급 사유"
+          }
+        },
+        "required": [
+          "userId",
+          "couponId",
+          "issueReason"
+        ]
+      },
+      "IssueCouponResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "쿠폰 ID",
+            "example": 1
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "쿠폰 만료일",
+            "example": "2023-12-31T23:59:59.999Z"
+          }
+        },
+        "required": [
+          "id",
+          "expiresAt"
+        ]
+      },
+      "BulkIssueCouponRequestDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "description": "사용자 ID"
+          },
+          "issueReason": {
+            "type": "string",
+            "description": "발급 사유"
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
+      "IssueCouponsForProductIssueFailedCouponResponseDto": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string",
+            "description": "발급 실패 코드",
+            "example": "C0001"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "발급 실패 메세지"
+          },
+          "couponId": {
+            "type": "number",
+            "description": "쿠폰 ID"
+          }
+        },
+        "required": [
+          "errorCode",
+          "errorMessage",
+          "couponId"
+        ]
+      },
+      "IssueCouponsForProductIssuedCouponResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "발급된 쿠폰의 ID"
+          },
+          "couponId": {
+            "type": "number",
+            "description": "쿠폰 ID"
+          },
+          "couponName": {
+            "type": "string",
+            "description": "쿠폰명"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "사용 종료일 (shopby: useEndYmdt)"
+          }
+        },
+        "required": [
+          "id",
+          "couponId",
+          "couponName",
+          "expiresAt"
+        ]
+      },
+      "IssueCouponsForProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "issueFailedCoupons": {
+            "description": "발급 실패 쿠폰 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IssueCouponsForProductIssueFailedCouponResponseDto"
+            }
+          },
+          "issuedCoupons": {
+            "description": "발급 성공 쿠폰 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IssueCouponsForProductIssuedCouponResponseDto"
+            }
+          }
+        },
+        "required": [
+          "issueFailedCoupons",
+          "issuedCoupons"
+        ]
+      },
+      "IssueExhibitionCouponsIssueFailedCouponResponseDto": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string",
+            "description": "발급 실패 코드",
+            "example": "C0001"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "발급 실패 메세지"
+          },
+          "couponId": {
+            "type": "number",
+            "description": "쿠폰 ID"
+          }
+        },
+        "required": [
+          "errorCode",
+          "errorMessage",
+          "couponId"
+        ]
+      },
+      "IssueExhibitionCouponsIssuedCouponResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "발급된 쿠폰의 ID"
+          },
+          "couponId": {
+            "type": "number",
+            "description": "쿠폰 ID"
+          },
+          "couponName": {
+            "type": "string",
+            "description": "쿠폰명"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "사용 종료일 (shopby: useEndYmdt)"
+          }
+        },
+        "required": [
+          "id",
+          "couponId",
+          "couponName",
+          "expiresAt"
+        ]
+      },
+      "IssueExhibitionCouponsResponseDto": {
+        "type": "object",
+        "properties": {
+          "issueFailedCoupons": {
+            "description": "발급 실패 쿠폰 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IssueExhibitionCouponsIssueFailedCouponResponseDto"
+            }
+          },
+          "issuedCoupons": {
+            "description": "발급 성공 쿠폰 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IssueExhibitionCouponsIssuedCouponResponseDto"
+            }
+          }
+        },
+        "required": [
+          "issueFailedCoupons",
+          "issuedCoupons"
+        ]
+      },
+      "GetIssuedCouponResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "발급된 쿠폰 ID"
+          },
+          "userId": {
+            "type": "number",
+            "description": "사용자 ID"
+          },
+          "couponId": {
+            "type": "number",
+            "description": "쿠폰 ID"
+          },
+          "issueType": {
+            "type": "string",
+            "description": "발급 유형"
+          },
+          "couponType": {
+            "type": "string",
+            "description": "쿠폰 유형"
+          },
+          "issuer": {
+            "type": "string",
+            "description": "발급자"
+          },
+          "issueReason": {
+            "type": "object",
+            "description": "발급 사유",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "description": "상태"
+          },
+          "actualDiscountAmount": {
+            "type": "object",
+            "description": "실제 할인 금액",
+            "nullable": true
+          },
+          "couponDiscountAmount": {
+            "type": "number",
+            "description": "쿠폰에 명시된 할인 금액"
+          },
+          "maxDiscountAmount": {
+            "type": "object",
+            "description": "최대 할인 금액",
+            "nullable": true
+          },
+          "couponName": {
+            "type": "string",
+            "description": "쿠폰 이름"
+          },
+          "usedAt": {
+            "type": "object",
+            "description": "사용일시",
+            "nullable": true
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "만료일"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "생성일"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "couponId",
+          "issueType",
+          "couponType",
+          "issuer",
+          "issueReason",
+          "status",
+          "actualDiscountAmount",
+          "couponDiscountAmount",
+          "maxDiscountAmount",
+          "couponName",
+          "usedAt",
+          "expiresAt",
+          "createdAt"
+        ]
+      },
+      "GetUsersUserGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "회원 그룹 번호"
+          },
+          "name": {
+            "type": "string",
+            "description": "회원 그룹 이름"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "GetUsersUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "회원 번호"
+          },
+          "externalId": {
+            "type": "string",
+            "description": "외부 회원 id"
+          },
+          "additionalUserId": {
+            "type": "string",
+            "description": "회원식별부가정보",
+            "nullable": true
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "테넌트 아이디"
+          },
+          "name": {
+            "type": "string",
+            "description": "이름"
+          },
+          "phoneNumber": {
+            "type": "object",
+            "description": "휴대전화 번호",
+            "nullable": true
+          },
+          "email": {
+            "type": "object",
+            "description": "이메일",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "description": "회원 상태",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          },
+          "userGroups": {
+            "description": "유저 그룹 정보",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetUsersUserGroupResponseDto"
+            }
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "회원 가입일"
+          }
+        },
+        "required": [
+          "id",
+          "externalId",
+          "additionalUserId",
+          "tenantId",
+          "name",
+          "phoneNumber",
+          "email",
+          "status",
+          "userGroups",
+          "createdAt"
+        ]
+      },
+      "GetUsersResponseDto": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "description": "회원 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetUsersUserResponseDto"
+            }
+          },
+          "totalCount": {
+            "type": "number",
+            "description": "총 회원 수"
+          }
+        },
+        "required": [
+          "users",
+          "totalCount"
+        ]
+      },
+      "GetUserUserGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "그룹 id"
+          },
+          "name": {
+            "type": "string",
+            "description": "그룹 이름"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "GetUserUserAddressResponseDto": {
+        "type": "object",
+        "properties": {
+          "main": {
+            "type": "string",
+            "description": "주소 정보"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "우편번호"
+          },
+          "detail": {
+            "type": "string",
+            "description": "상세 주소 정보",
+            "nullable": true
+          }
+        },
+        "required": [
+          "main",
+          "zipCode",
+          "detail"
+        ]
+      },
+      "GetUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "회원 번호"
+          },
+          "additionalUserId": {
+            "type": "string",
+            "description": "회원식별부가정보",
+            "nullable": true
+          },
+          "externalId": {
+            "type": "string",
+            "description": "외부 회원 id"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "테넌트 아이디"
+          },
+          "status": {
+            "type": "string",
+            "description": "회원 상태",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "이름"
+          },
+          "phoneNumber": {
+            "type": "object",
+            "description": "휴대전화 번호",
+            "nullable": true
+          },
+          "email": {
+            "type": "object",
+            "description": "이메일",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "enum": [
+              "M",
+              "F"
+            ],
+            "description": "성별",
+            "nullable": true
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "생년월일",
+            "nullable": true
+          },
+          "userGroups": {
+            "description": "유저 그룹 정보",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetUserUserGroupResponseDto"
+            }
+          },
+          "address": {
+            "description": "주소 정보",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetUserUserAddressResponseDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "회원 가입일"
+          }
+        },
+        "required": [
+          "id",
+          "additionalUserId",
+          "externalId",
+          "tenantId",
+          "status",
+          "name",
+          "phoneNumber",
+          "email",
+          "gender",
+          "birthDate",
+          "userGroups",
+          "address",
+          "createdAt"
+        ]
+      },
+      "CheckUserOrderExistsResponseDto": {
+        "type": "object",
+        "properties": {
+          "userHasOrder": {
+            "type": "boolean",
+            "description": "유저 주문 존재 여부"
+          }
+        },
+        "required": [
+          "userHasOrder"
+        ]
+      },
+      "GetOrderOrdererGroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "회원 그룹 아이디"
+          },
+          "name": {
+            "type": "string",
+            "description": "회원 그룹명"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "GetOrderOptionMapResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "옵션명"
+          },
+          "value": {
+            "type": "string",
+            "description": "옵션값"
+          }
+        },
+        "required": [
+          "name",
+          "value"
+        ]
+      },
+      "GetOrderOptionWithMapResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "주문 옵션 아이디"
+          },
+          "orderId": {
+            "type": "string",
+            "description": "주문 아이디"
+          },
+          "orderProductId": {
+            "type": "number",
+            "description": "주문 항목 아이디"
+          },
+          "productOptionId": {
+            "type": "number",
+            "description": "상품 옵션 아이디",
+            "nullable": true
+          },
+          "orderStatus": {
+            "type": "string",
+            "description": "주문 상태",
+            "enum": [
+              "PAYMENT_DONE",
+              "PAYMENT_CANCEL",
+              "PAYMENT_FAIL",
+              "PAYMENT_WAIT",
+              "PRODUCT_PREPARE",
+              "DELIVERY_PREPARE",
+              "DELIVERY_ING",
+              "DELIVERY_DONE",
+              "BUY_CONFIRM",
+              "CANCEL_DONE",
+              "RETURN_DONE",
+              "ETC"
+            ]
+          },
+          "claimId": {
+            "type": "number",
+            "description": "클레임 아이디",
+            "nullable": true
+          },
+          "claimStatus": {
+            "type": "string",
+            "description": "클레임 상태",
+            "nullable": true,
+            "enum": [
+              "CANCEL_NO_REFUND",
+              "CANCEL_DONE",
+              "CANCEL_REQUEST",
+              "CANCEL_PROC_WAITING_REFUND",
+              "RETURN_NO_REFUND",
+              "RETURN_DONE",
+              "RETURN_REQUEST",
+              "RETURN_PROC_BEFORE_RECEIVE",
+              "RETURN_PROC_WAITING_REFUND",
+              "EXCHANGE_DONE",
+              "WITHDRAWN"
+            ]
+          },
+          "salePrice": {
+            "type": "number",
+            "description": "판매 가격"
+          },
+          "count": {
+            "type": "number",
+            "description": "수량"
+          },
+          "productPreparedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "상품 준비 일시",
+            "nullable": true
+          },
+          "buyConfirmedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "구매 확정 일시",
+            "nullable": true
+          },
+          "deliveryPreparedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "배송 준비 일시",
+            "nullable": true
+          },
+          "map": {
+            "description": "옵션 매핑",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetOrderOptionMapResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "orderId",
+          "orderProductId",
+          "productOptionId",
+          "orderStatus",
+          "claimId",
+          "claimStatus",
+          "salePrice",
+          "count",
+          "productPreparedAt",
+          "buyConfirmedAt",
+          "deliveryPreparedAt",
+          "map"
+        ]
+      },
+      "GetOrderPartnerResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "아이디"
+          },
+          "name": {
+            "type": "string",
+            "description": "이름"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "테넌트 아이디"
+          },
+          "merchandiserId": {
+            "type": "number",
+            "description": "머천다이저 아이디"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "tenantId",
+          "merchandiserId"
+        ]
+      },
+      "GetOrderProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "주문 상품 아이디"
+          },
+          "orderId": {
+            "type": "string",
+            "description": "주문 아이디"
+          },
+          "productId": {
+            "type": "number",
+            "description": "상품 아이디"
+          },
+          "accumulationRate": {
+            "type": "number",
+            "description": "적립률"
+          },
+          "commissionRate": {
+            "type": "number",
+            "description": "수수료율"
+          },
+          "partnerId": {
+            "type": "number",
+            "description": "파트너 아이디"
+          },
+          "productName": {
+            "type": "string",
+            "description": "상품명"
+          },
+          "salePrice": {
+            "type": "number",
+            "description": "판매 가격"
+          },
+          "initialCouponDiscountAmount": {
+            "type": "number",
+            "description": "초기 상품 쿠폰 할인 금액",
+            "nullable": true
+          },
+          "finalCouponDiscountAmount": {
+            "type": "number",
+            "description": "최종 상품 쿠폰 할인 금액",
+            "nullable": true
+          },
+          "couponId": {
+            "type": "number",
+            "description": "상품 쿠폰 아이디",
+            "nullable": true
+          },
+          "options": {
+            "description": "주문 옵션 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetOrderOptionWithMapResponseDto"
+            }
+          },
+          "partner": {
+            "description": "주문 파트너 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetOrderPartnerResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "orderId",
+          "productId",
+          "accumulationRate",
+          "commissionRate",
+          "partnerId",
+          "productName",
+          "salePrice",
+          "initialCouponDiscountAmount",
+          "finalCouponDiscountAmount",
+          "couponId",
+          "options",
+          "partner"
+        ]
+      },
+      "GetOrderDeliveryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "배송 정보 id"
+          },
+          "recipientName": {
+            "type": "string",
+            "description": "수령인 이름"
+          },
+          "recipientPhoneNumber": {
+            "type": "string",
+            "description": "수령인 전화번호"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "우편번호"
+          },
+          "address": {
+            "type": "string",
+            "description": "주소"
+          },
+          "addressDetail": {
+            "type": "string",
+            "description": "상세 주소"
+          },
+          "feeType": {
+            "type": "string",
+            "description": "배송비 타입",
+            "enum": [
+              "FREE",
+              "PAID",
+              "CONDITIONAL"
+            ]
+          },
+          "fee": {
+            "type": "number",
+            "description": "배송비"
+          },
+          "regionalFee": {
+            "type": "number",
+            "description": "지역 배송비"
+          },
+          "type": {
+            "type": "string",
+            "description": "배송 유형",
+            "enum": [
+              "PARCEL_DELIVERY",
+              "DIRECT_DELIVERY",
+              "NONE"
+            ]
+          },
+          "company": {
+            "type": "string",
+            "description": "배송 회사",
+            "nullable": true,
+            "enum": [
+              "CJ",
+              "POST",
+              "HANJIN",
+              "GTX",
+              "LOTTE",
+              "KGB",
+              "LOGEN",
+              "GSI",
+              "KGL",
+              "INTRAS",
+              "UPS",
+              "JAPANPOST",
+              "YAMATO",
+              "SAGAWA",
+              "CHUNIL",
+              "KDEXP",
+              "HDEXP",
+              "ILYANG",
+              "POST_EMS",
+              "DAESIN",
+              "CVS",
+              "DHL",
+              "FEDEX",
+              "GSM",
+              "WARPEX",
+              "WIZWA",
+              "ACI",
+              "PANTOS",
+              "CJ_INTERNATIONAL",
+              "TNT",
+              "CU",
+              "KUNYOUNG",
+              "LOTTE_INTERNATIONAL",
+              "HONAM",
+              "HANIPS",
+              "IPARCEL",
+              "SLX",
+              "USPS",
+              "WONDERS",
+              "REGISTPOST",
+              "DHLDE",
+              "EZUSA",
+              "SWGEXP",
+              "DAEWOON",
+              "DODOFLEX",
+              "NH_LOGIS",
+              "UFO",
+              "TODAY_PICKUP",
+              "QEXPRESS",
+              "PINGPONG",
+              "CR_LOGITECH",
+              "TODAY",
+              "SELLUV",
+              "EXMATE",
+              "ETC"
+            ]
+          },
+          "isDivided": {
+            "type": "boolean",
+            "description": "나눔 배송 유무"
+          },
+          "trackingNumber": {
+            "type": "string",
+            "description": "운송장 번호",
+            "nullable": true
+          },
+          "inDeliveryAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "배송 중 일시",
+            "nullable": true
+          },
+          "deliveryCompletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "배송 완료 일시",
+            "nullable": true
+          },
+          "products": {
+            "description": "주문 항목 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetOrderProductResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "recipientName",
+          "recipientPhoneNumber",
+          "zipCode",
+          "address",
+          "addressDetail",
+          "feeType",
+          "fee",
+          "regionalFee",
+          "type",
+          "company",
+          "isDivided",
+          "trackingNumber",
+          "inDeliveryAt",
+          "deliveryCompletedAt",
+          "products"
+        ]
+      },
+      "GetOrderPaymentResponseDto": {
+        "type": "object",
+        "properties": {
+          "paymentAmount": {
+            "type": "number",
+            "description": "실결제 금액",
+            "nullable": true
+          },
+          "usedPointAmount": {
+            "type": "number",
+            "description": "사용 포인트량",
+            "nullable": true
+          }
+        },
+        "required": [
+          "paymentAmount",
+          "usedPointAmount"
+        ]
+      },
+      "GetOrderResponseDto": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "description": "주문 id"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "테넌트 id"
+          },
+          "ordererName": {
+            "type": "string",
+            "description": "주문자 이름"
+          },
+          "ordererEmail": {
+            "type": "string",
+            "description": "주문자 이메일"
+          },
+          "ordererPhoneNumber": {
+            "type": "string",
+            "description": "주문자 전화번호"
+          },
+          "ordererGroups": {
+            "description": "주문자 그룹",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetOrderOrdererGroupResponseDto"
+            }
+          },
+          "additionalOrdererId": {
+            "type": "string",
+            "description": "주문자 추가 식별값",
+            "nullable": true
+          },
+          "ordererId": {
+            "type": "number",
+            "description": "주문자 id"
+          },
+          "initialCouponDiscountAmount": {
+            "type": "number",
+            "description": "최초 장바구니 쿠폰 할인 금액",
+            "nullable": true
+          },
+          "finalCouponDiscountAmount": {
+            "type": "number",
+            "description": "최종 장바구니 쿠폰 할인 금액",
+            "nullable": true
+          },
+          "couponId": {
+            "type": "number",
+            "description": "장바구니 쿠폰 id",
+            "nullable": true
+          },
+          "issuedCouponId": {
+            "type": "number",
+            "description": "상품 쿠폰 발급 아이디",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "생성 날짜"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "업데이트 날짜"
+          },
+          "deliveries": {
+            "description": "배송 정보",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetOrderDeliveryResponseDto"
+            }
+          },
+          "initialPayment": {
+            "description": "최초 주문 결제 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetOrderPaymentResponseDto"
+              }
+            ]
+          },
+          "finalPayment": {
+            "description": "최종 주문 결제 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetOrderPaymentResponseDto"
+              }
+            ]
+          },
+          "isMigrated": {
+            "type": "boolean",
+            "description": "마이그레이션 여부"
+          }
+        },
+        "required": [
+          "orderId",
+          "tenantId",
+          "ordererName",
+          "ordererEmail",
+          "ordererPhoneNumber",
+          "ordererGroups",
+          "additionalOrdererId",
+          "ordererId",
+          "initialCouponDiscountAmount",
+          "finalCouponDiscountAmount",
+          "couponId",
+          "issuedCouponId",
+          "createdAt",
+          "updatedAt",
+          "deliveries",
+          "initialPayment",
+          "finalPayment",
+          "isMigrated"
+        ]
+      },
+      "CreatePointRequestDto": {
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "number",
+            "description": "외부 회원 id"
+          },
+          "operationType": {
+            "type": "string",
+            "enum": [
+              "PLUS",
+              "MINUS"
+            ],
+            "description": "포인트 작업 유형"
+          },
+          "amount": {
+            "type": "number",
+            "description": "적립/차감할 포인트 금액"
+          },
+          "reason": {
+            "type": "string",
+            "description": "사유 타입"
+          },
+          "reasonType": {
+            "type": "string",
+            "enum": [
+              "ADD_AFTER_PAYMENT",
+              "ADD_AFTER_EVENT_PAYMENT",
+              "ADD_AFTER_REPLACE_PAYMENT",
+              "ADD_POSTING",
+              "ADD_CANCEL",
+              "ADD_RETURN",
+              "ADD_MANUAL",
+              "ADD_EVENT",
+              "ADD_SIGNUP",
+              "ADD_BIRTHDAY",
+              "ADD_APP_INSTALL",
+              "ADD_APP_ORDER",
+              "ADD_APP_NOTIFICATION",
+              "ADD_GRADE",
+              "ADD_GRADE_BENEFIT",
+              "ADD_COUPON",
+              "SUB_PAYMENT_USED",
+              "SUB_EXTRA_PAYMENT_USED",
+              "SUB_CANCEL",
+              "SUB_RETURN",
+              "SUB_DELETE_POSTING",
+              "SUB_EXPIRED",
+              "SUB_MANUAL",
+              "SUB_DELETE_ACCOUNT",
+              "EXTERNAL_ACCUMULATION"
+            ],
+            "description": "포인트 적립 사유"
+          },
+          "processCompletedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "포인트 처리 일자"
+          },
+          "externalRollbackKey": {
+            "type": "string",
+            "description": "외부 롤백 키"
+          }
+        },
+        "required": [
+          "externalId",
+          "operationType",
+          "amount",
+          "reason",
+          "reasonType",
+          "processCompletedAt",
+          "externalRollbackKey"
+        ]
+      },
+      "GetAllProductsProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "상품 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "상품명"
+          },
+          "stockQuantity": {
+            "type": "number",
+            "description": "상품 재고 수량"
+          },
+          "stockStatus": {
+            "type": "string",
+            "description": "재고 상태",
+            "enum": [
+              "IN_STOCK",
+              "TEMP_OUT_OF_STOCK",
+              "SOLD_OUT"
+            ]
+          },
+          "thumbnailImageUrl": {
+            "type": "string",
+            "description": "상품 썸네일 이미지 URL"
+          },
+          "detail": {
+            "type": "string",
+            "description": "상품 상세 설명"
+          },
+          "saleSetting": {
+            "type": "string",
+            "description": "판매 설정",
+            "enum": [
+              "AVAILABLE",
+              "STOPPED",
+              "PROHIBITED"
+            ]
+          },
+          "saleStatus": {
+            "type": "string",
+            "description": "판매 상태",
+            "enum": [
+              "PENDING",
+              "IN_SALE",
+              "SALE_ENDED"
+            ]
+          },
+          "isDisplayed": {
+            "type": "boolean",
+            "description": "노출 여부"
+          },
+          "accumulationRate": {
+            "type": "number",
+            "description": "적립률"
+          },
+          "commissionType": {
+            "type": "string",
+            "description": "수수료 유형",
+            "enum": [
+              "CATEGORY",
+              "PRODUCT"
+            ]
+          },
+          "commissionRate": {
+            "type": "number",
+            "description": "수수료율"
+          },
+          "hasOptions": {
+            "type": "boolean",
+            "description": "옵션 여부"
+          },
+          "saleCount": {
+            "type": "number",
+            "description": "판매 수량"
+          },
+          "regularPrice": {
+            "type": "number",
+            "description": "정가"
+          },
+          "salePrice": {
+            "type": "number",
+            "description": "판매가격"
+          },
+          "accumulationPoint": {
+            "type": "number",
+            "description": "적립포인트"
+          },
+          "deliveryFeeType": {
+            "type": "string",
+            "description": "배송비 유형",
+            "enum": [
+              "FREE",
+              "PAID",
+              "CONDITIONAL"
+            ]
+          },
+          "deliveryFee": {
+            "type": "number",
+            "description": "배송비"
+          },
+          "totalReviewCount": {
+            "type": "number",
+            "description": "상품의 총 리뷰 수"
+          },
+          "averageReviewRating": {
+            "type": "number",
+            "description": "상품 평균 리뷰 평점"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "stockQuantity",
+          "stockStatus",
+          "thumbnailImageUrl",
+          "detail",
+          "saleSetting",
+          "saleStatus",
+          "isDisplayed",
+          "accumulationRate",
+          "commissionType",
+          "commissionRate",
+          "hasOptions",
+          "saleCount",
+          "regularPrice",
+          "salePrice",
+          "accumulationPoint",
+          "deliveryFeeType",
+          "deliveryFee",
+          "totalReviewCount",
+          "averageReviewRating"
+        ]
+      },
+      "GetAllProductsResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "number",
+            "description": "총 상품 개수"
+          },
+          "products": {
+            "description": "상품 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetAllProductsProductResponseDto"
+            }
+          }
+        },
+        "required": [
+          "totalCount",
+          "products"
+        ]
+      },
+      "GetProductStatisticsResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "상품 ID"
+          },
+          "totalSalePrice": {
+            "type": "string",
+            "description": "상품 총 판매 가격"
+          }
+        },
+        "required": [
+          "id",
+          "totalSalePrice"
+        ]
+      },
+      "ProductWithStandardCategoryFullNameResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "상품 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "상품명"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "테넌트 ID"
+          },
+          "stockQuantity": {
+            "type": "number",
+            "description": "상품 재고 수량"
+          },
+          "thumbnailImageUrl": {
+            "type": "string",
+            "description": "상품 썸네일 이미지 URL"
+          },
+          "detail": {
+            "type": "string",
+            "description": "상품 상세 설명"
+          },
+          "standardCategoryFullName": {
+            "type": "string",
+            "description": "표준 카테고리 전체 이름"
+          },
+          "standardCategoryId": {
+            "type": "number",
+            "description": "표준 카테고리 ID"
+          },
+          "hasProductNotice": {
+            "type": "boolean",
+            "description": "상품 정보 고시 여부"
+          },
+          "saleSetting": {
+            "type": "string",
+            "description": "판매 설정",
+            "enum": [
+              "AVAILABLE",
+              "STOPPED",
+              "PROHIBITED"
+            ]
+          },
+          "partnerId": {
+            "type": "number",
+            "description": "파트너 ID"
+          },
+          "saleStatus": {
+            "type": "string",
+            "description": "판매 상태",
+            "enum": [
+              "PENDING",
+              "IN_SALE",
+              "SALE_ENDED"
+            ]
+          },
+          "isAlwaysAvailable": {
+            "type": "boolean",
+            "description": "상품 상시 판매 유무"
+          },
+          "saleStartDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "판매 시작일",
+            "nullable": true
+          },
+          "saleEndDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "판매 종료일",
+            "nullable": true
+          },
+          "isDisplayed": {
+            "type": "boolean",
+            "description": "노출 여부"
+          },
+          "accumulationRate": {
+            "type": "number",
+            "example": 0.1,
+            "description": "적립률"
+          },
+          "commissionType": {
+            "type": "string",
+            "description": "수수료 유형",
+            "enum": [
+              "CATEGORY",
+              "PRODUCT"
+            ]
+          },
+          "commissionRate": {
+            "type": "number",
+            "example": 0.1,
+            "description": "수수료율"
+          },
+          "hasOptions": {
+            "type": "boolean",
+            "description": "옵션 여부"
+          },
+          "saleCount": {
+            "type": "number",
+            "description": "판매 수량"
+          },
+          "regularPrice": {
+            "type": "number",
+            "description": "정가"
+          },
+          "salePrice": {
+            "type": "number",
+            "description": "판매가격"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "생성 날짜"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "수정 날짜"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "tenantId",
+          "stockQuantity",
+          "thumbnailImageUrl",
+          "detail",
+          "standardCategoryFullName",
+          "standardCategoryId",
+          "hasProductNotice",
+          "saleSetting",
+          "partnerId",
+          "saleStatus",
+          "isAlwaysAvailable",
+          "saleStartDate",
+          "saleEndDate",
+          "isDisplayed",
+          "accumulationRate",
+          "commissionType",
+          "commissionRate",
+          "hasOptions",
+          "saleCount",
+          "regularPrice",
+          "salePrice",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "AddressResponseDto": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "출고지 주소"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "출고지 우편번호"
+          },
+          "addressDetail": {
+            "type": "string",
+            "description": "출고지 상세 주소"
+          }
+        },
+        "required": [
+          "address",
+          "zipCode",
+          "addressDetail"
+        ]
+      },
+      "AdditionalDeliveryFeeResponseDto": {
+        "type": "object",
+        "properties": {
+          "jeju": {
+            "type": "number",
+            "description": "제주 지역 추가 배송비"
+          },
+          "remoteArea": {
+            "type": "number",
+            "description": "도서/산간 지역 추가 배송비"
+          }
+        },
+        "required": [
+          "jeju",
+          "remoteArea"
+        ]
+      },
+      "ProductDeliveryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "배송 ID"
+          },
+          "productId": {
+            "type": "number",
+            "description": "상품 ID"
+          },
+          "type": {
+            "type": "string",
+            "description": "배송 타입",
+            "enum": [
+              "PARCEL_DELIVERY",
+              "DIRECT_DELIVERY",
+              "NONE"
+            ]
+          },
+          "company": {
+            "type": "string",
+            "description": "배송사 정보",
+            "enum": [
+              "CJ",
+              "POST",
+              "HANJIN",
+              "GTX",
+              "LOTTE",
+              "KGB",
+              "LOGEN",
+              "GSI",
+              "KGL",
+              "INTRAS",
+              "UPS",
+              "JAPANPOST",
+              "YAMATO",
+              "SAGAWA",
+              "CHUNIL",
+              "KDEXP",
+              "HDEXP",
+              "ILYANG",
+              "POST_EMS",
+              "DAESIN",
+              "CVS",
+              "DHL",
+              "FEDEX",
+              "GSM",
+              "WARPEX",
+              "WIZWA",
+              "ACI",
+              "PANTOS",
+              "CJ_INTERNATIONAL",
+              "TNT",
+              "CU",
+              "KUNYOUNG",
+              "LOTTE_INTERNATIONAL",
+              "HONAM",
+              "HANIPS",
+              "IPARCEL",
+              "SLX",
+              "USPS",
+              "WONDERS",
+              "REGISTPOST",
+              "DHLDE",
+              "EZUSA",
+              "SWGEXP",
+              "DAEWOON",
+              "DODOFLEX",
+              "NH_LOGIS",
+              "UFO",
+              "TODAY_PICKUP",
+              "QEXPRESS",
+              "PINGPONG",
+              "CR_LOGITECH",
+              "TODAY",
+              "SELLUV",
+              "EXMATE",
+              "ETC"
+            ],
+            "nullable": true
+          },
+          "feeType": {
+            "type": "string",
+            "description": "배송비 유형 (무료/유료/조건부무료)",
+            "enum": [
+              "FREE",
+              "PAID",
+              "CONDITIONAL"
+            ]
+          },
+          "fee": {
+            "type": "number",
+            "description": "배송비 금액"
+          },
+          "warehouse": {
+            "description": "출고지 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressResponseDto"
+              }
+            ]
+          },
+          "return": {
+            "description": "반품지 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AddressResponseDto"
+              }
+            ]
+          },
+          "returnFee": {
+            "type": "number",
+            "description": "반품비"
+          },
+          "additionalFee": {
+            "description": "추가 배송비",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AdditionalDeliveryFeeResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "productId",
+          "type",
+          "company",
+          "feeType",
+          "fee",
+          "warehouse",
+          "return",
+          "returnFee",
+          "additionalFee"
+        ]
+      },
+      "SearchProductNameResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "이름"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ProductDisplayCategoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "카테고리 ID"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "테넌트 ID"
+          },
+          "parentId": {
+            "type": "number",
+            "description": "부모 카테고리 ID",
+            "nullable": true
+          },
+          "depth": {
+            "type": "number",
+            "description": "카테고리 깊이"
+          },
+          "sequence": {
+            "type": "number",
+            "description": "카테고리 순서"
+          },
+          "name": {
+            "type": "string",
+            "description": "카테고리 이름"
+          },
+          "icon": {
+            "type": "string",
+            "description": "카테고리 아이콘 URL"
+          },
+          "Parent": {
+            "description": "부모 카테고리 정보",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductDisplayCategoryResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "parentId",
+          "depth",
+          "sequence",
+          "name",
+          "icon"
+        ]
+      },
+      "SearchProductContentResponseDto": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "description": "상품 정보 (표준 카테고리 전체 이름 포함)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductWithStandardCategoryFullNameResponseDto"
+              }
+            ]
+          },
+          "delivery": {
+            "description": "상품 배송 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductDeliveryResponseDto"
+              }
+            ]
+          },
+          "partner": {
+            "description": "파트너 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SearchProductNameResponseDto"
+              }
+            ]
+          },
+          "merchandiser": {
+            "description": "담당자 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SearchProductNameResponseDto"
+              }
+            ]
+          },
+          "categories": {
+            "description": "상품 카테고리 트리",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductDisplayCategoryResponseDto"
+            }
+          }
+        },
+        "required": [
+          "product",
+          "delivery",
+          "partner",
+          "merchandiser",
+          "categories"
+        ]
+      },
+      "SearchProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "number",
+            "description": "조회된 총 상품 개수"
+          },
+          "contents": {
+            "description": "상품 정보",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchProductContentResponseDto"
+            }
+          }
+        },
+        "required": [
+          "totalCount",
+          "contents"
+        ]
+      },
+      "GetProductWithoutOptionThumbnailResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "상품 썸네일 이미지 URL"
+          },
+          "name": {
+            "type": "string",
+            "description": "상품 썸네일 원본 파일 이름",
+            "nullable": true
+          },
+          "uploadMethod": {
+            "type": "string",
+            "description": "썸네일 업로드 방식",
+            "enum": [
+              "FILE",
+              "EXTERNAL_URL"
+            ]
+          }
+        },
+        "required": [
+          "url",
+          "name",
+          "uploadMethod"
+        ]
+      },
+      "GetProductWithoutOptionProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "상품 id"
+          },
+          "name": {
+            "type": "string",
+            "example": "무선 헤드폰",
+            "description": "상품 이름"
+          },
+          "tenantId": {
+            "type": "number",
+            "example": 1001,
+            "description": "테넌트 ID"
+          },
+          "stockQuantity": {
+            "type": "number",
+            "example": 50,
+            "description": "현재 재고 수량"
+          },
+          "thumbnail": {
+            "description": "상품 썸네일 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetProductWithoutOptionThumbnailResponseDto"
+              }
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "example": "고품질 무선 헤드폰",
+            "description": "상품 상세 설명"
+          },
+          "merchandiserId": {
+            "type": "number",
+            "example": 2001,
+            "description": "상품 담당 어드민 ID"
+          },
+          "standardCategoryId": {
+            "type": "number",
+            "example": 3001,
+            "description": "표준 카테고리 ID"
+          },
+          "hasProductNotice": {
+            "type": "boolean",
+            "example": true,
+            "description": "상품 정보 고지 여부"
+          },
+          "saleSetting": {
+            "type": "string",
+            "description": "상품의 판매 설정",
+            "enum": [
+              "AVAILABLE",
+              "STOPPED",
+              "PROHIBITED"
+            ]
+          },
+          "partnerId": {
+            "type": "number",
+            "example": 4001,
+            "description": "파트너사 ID"
+          },
+          "isAlwaysAvailable": {
+            "type": "boolean",
+            "description": "상시 판매 유무"
+          },
+          "saleStartDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-02-13T00:00:00.000Z",
+            "description": "판매 시작 날짜",
+            "nullable": true
+          },
+          "saleEndDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-12-31T23:59:59.000Z",
+            "description": "판매 종료 날짜",
+            "nullable": true
+          },
+          "isDisplayed": {
+            "type": "boolean",
+            "example": true,
+            "description": "상품이 노출되는지 여부"
+          },
+          "accumulationRate": {
+            "type": "number",
+            "example": 0.05,
+            "description": "적립률"
+          },
+          "commissionType": {
+            "type": "string",
+            "description": "상품의 수수료 타입",
+            "enum": [
+              "CATEGORY",
+              "PRODUCT"
+            ]
+          },
+          "commissionRate": {
+            "type": "number",
+            "example": 0.1,
+            "description": "수수료율"
+          },
+          "hasOptions": {
+            "type": "boolean",
+            "example": true,
+            "description": "옵션이 있는 상품인지 여부"
+          },
+          "vatType": {
+            "type": "string",
+            "description": "부가세 과세 타입",
+            "enum": [
+              "TAXABLE",
+              "EXEMPT",
+              "ZERO_RATED"
+            ]
+          },
+          "hasCertificationNotice": {
+            "type": "boolean",
+            "description": "상품 인증 정보 고시 여부"
+          },
+          "saleCount": {
+            "type": "number",
+            "example": 150,
+            "description": "총 판매 개수"
+          },
+          "regularPrice": {
+            "type": "number",
+            "example": 50000,
+            "description": "정상 가격"
+          },
+          "salePrice": {
+            "type": "number",
+            "example": 45000,
+            "description": "할인 적용 후 판매 가격"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "tenantId",
+          "stockQuantity",
+          "thumbnail",
+          "detail",
+          "merchandiserId",
+          "standardCategoryId",
+          "hasProductNotice",
+          "saleSetting",
+          "partnerId",
+          "isAlwaysAvailable",
+          "saleStartDate",
+          "saleEndDate",
+          "isDisplayed",
+          "accumulationRate",
+          "commissionType",
+          "commissionRate",
+          "hasOptions",
+          "vatType",
+          "hasCertificationNotice",
+          "saleCount",
+          "regularPrice",
+          "salePrice"
+        ]
+      },
+      "GetProductWithoutOptionAddressResponseDto": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "출고지 주소"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "출고지 우편번호"
+          },
+          "addressDetail": {
+            "type": "string",
+            "description": "출고지 상세 주소"
+          }
+        },
+        "required": [
+          "address",
+          "zipCode",
+          "addressDetail"
+        ]
+      },
+      "GetProductWithoutOptionDeliveryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "배송 정보의 고유 식별자"
+          },
+          "productId": {
+            "type": "number",
+            "example": 101,
+            "description": "상품의 고유 식별자"
+          },
+          "type": {
+            "type": "string",
+            "description": "배송 타입",
+            "enum": [
+              "PARCEL_DELIVERY",
+              "DIRECT_DELIVERY",
+              "NONE"
+            ]
+          },
+          "company": {
+            "type": "string",
+            "description": "배송 업체",
+            "enum": [
+              "CJ",
+              "POST",
+              "HANJIN",
+              "GTX",
+              "LOTTE",
+              "KGB",
+              "LOGEN",
+              "GSI",
+              "KGL",
+              "INTRAS",
+              "UPS",
+              "JAPANPOST",
+              "YAMATO",
+              "SAGAWA",
+              "CHUNIL",
+              "KDEXP",
+              "HDEXP",
+              "ILYANG",
+              "POST_EMS",
+              "DAESIN",
+              "CVS",
+              "DHL",
+              "FEDEX",
+              "GSM",
+              "WARPEX",
+              "WIZWA",
+              "ACI",
+              "PANTOS",
+              "CJ_INTERNATIONAL",
+              "TNT",
+              "CU",
+              "KUNYOUNG",
+              "LOTTE_INTERNATIONAL",
+              "HONAM",
+              "HANIPS",
+              "IPARCEL",
+              "SLX",
+              "USPS",
+              "WONDERS",
+              "REGISTPOST",
+              "DHLDE",
+              "EZUSA",
+              "SWGEXP",
+              "DAEWOON",
+              "DODOFLEX",
+              "NH_LOGIS",
+              "UFO",
+              "TODAY_PICKUP",
+              "QEXPRESS",
+              "PINGPONG",
+              "CR_LOGITECH",
+              "TODAY",
+              "SELLUV",
+              "EXMATE",
+              "ETC"
+            ],
+            "nullable": true
+          },
+          "feeType": {
+            "type": "string",
+            "description": "배송비 타입",
+            "enum": [
+              "FREE",
+              "PAID",
+              "CONDITIONAL"
+            ]
+          },
+          "fee": {
+            "type": "number",
+            "example": 2500,
+            "description": "배송비"
+          },
+          "returnFee": {
+            "type": "number",
+            "example": 0,
+            "description": "반품 배송비"
+          },
+          "warehouse": {
+            "description": "출고지 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetProductWithoutOptionAddressResponseDto"
+              }
+            ]
+          },
+          "return": {
+            "description": "반품지 정보",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetProductWithoutOptionAddressResponseDto"
+              }
+            ]
+          },
+          "jejuAdditionalFee": {
+            "type": "number",
+            "example": 3000,
+            "description": "제주 추가 배송비"
+          },
+          "remoteAreaAdditionalFee": {
+            "type": "number",
+            "example": 4000,
+            "description": "도서산간 추가 배송비"
+          }
+        },
+        "required": [
+          "id",
+          "productId",
+          "type",
+          "company",
+          "feeType",
+          "fee",
+          "returnFee",
+          "warehouse",
+          "return",
+          "jejuAdditionalFee",
+          "remoteAreaAdditionalFee"
+        ]
+      },
+      "GetProductWithoutOptionPartnerResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "파트너 ID"
+          },
+          "name": {
+            "type": "string",
+            "example": "파트너명",
+            "description": "파트너 이름"
+          },
+          "tenantId": {
+            "type": "number",
+            "example": 1001,
+            "description": "테넌트 ID"
+          },
+          "merchandiserId": {
+            "type": "number",
+            "example": 2001,
+            "description": "상품 담당 어드민 ID"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "tenantId",
+          "merchandiserId"
+        ]
+      },
+      "GetProductWithoutOptionAdminResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "관리자 고유 식별자"
+          },
+          "name": {
+            "type": "string",
+            "example": "홍길동",
+            "description": "관리자 이름"
+          },
+          "tenantId": {
+            "type": "number",
+            "example": 1001,
+            "description": "테넌트 ID"
+          },
+          "department": {
+            "type": "string",
+            "example": "개발부",
+            "description": "관리자가 소속된 부서"
+          },
+          "email": {
+            "type": "string",
+            "example": "admin@example.com",
+            "description": "관리자 이메일"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "tenantId",
+          "department",
+          "email"
+        ]
+      },
+      "GetProductWithoutOptionStandardCategoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "표준 카테고리 ID"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "식품 > 육류 > 양고기",
+            "description": "표준 카테고리 경로 전체 이름"
+          }
+        },
+        "required": [
+          "id",
+          "fullName"
+        ]
+      },
+      "GetProductWithoutOptionDisplayCategoryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1001,
+            "description": "디스플레이 카테고리 ID"
+          },
+          "fullName": {
+            "type": "string",
+            "example": "식품 > 육류 > 양고기",
+            "description": "전시 카테고리 경로 전체 이름"
+          }
+        },
+        "required": [
+          "id",
+          "fullName"
+        ]
+      },
+      "GetProductWithoutOptionContentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1001,
+            "description": "사진 ID"
+          },
+          "uploadMethod": {
+            "type": "string",
+            "example": "업로드 방식",
+            "enum": [
+              "FILE",
+              "EXTERNAL_URL"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "example": "image.jpg",
+            "description": "파일 이름(직접 업로드만 해당)",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "example": "https://example.com/image.jpg",
+            "description": "URL"
+          }
+        },
+        "required": [
+          "id",
+          "uploadMethod",
+          "name",
+          "url"
+        ]
+      },
+      "GetProductWithoutOptionResponseDto": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "$ref": "#/components/schemas/GetProductWithoutOptionProductResponseDto"
+          },
+          "productDelivery": {
+            "$ref": "#/components/schemas/GetProductWithoutOptionDeliveryResponseDto"
+          },
+          "partner": {
+            "$ref": "#/components/schemas/GetProductWithoutOptionPartnerResponseDto"
+          },
+          "merchandiser": {
+            "$ref": "#/components/schemas/GetProductWithoutOptionAdminResponseDto"
+          },
+          "standardCategory": {
+            "$ref": "#/components/schemas/GetProductWithoutOptionStandardCategoryResponseDto"
+          },
+          "productDisplayCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetProductWithoutOptionDisplayCategoryResponseDto"
+            }
+          },
+          "contents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetProductWithoutOptionContentResponseDto"
+            }
+          }
+        },
+        "required": [
+          "product",
+          "productDelivery",
+          "partner",
+          "merchandiser",
+          "standardCategory",
+          "productDisplayCategories",
+          "contents"
+        ]
+      },
+      "ExhibitionProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "상품 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "상품 이름"
+          },
+          "partnerName": {
+            "type": "string",
+            "description": "파트너 이름"
+          },
+          "saleStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "IN_SALE",
+              "SALE_ENDED"
+            ],
+            "description": "판매 상태 (판매 가능 또는 판매 불가)"
+          },
+          "regularPrice": {
+            "type": "number",
+            "description": "정상가"
+          },
+          "salePrice": {
+            "type": "number",
+            "description": "할인가"
+          },
+          "stockQuantity": {
+            "type": "number",
+            "description": "재고 수량"
+          },
+          "stockStatus": {
+            "type": "string",
+            "enum": [
+              "IN_STOCK",
+              "TEMP_OUT_OF_STOCK",
+              "SOLD_OUT"
+            ],
+            "description": "재고 상태"
+          },
+          "thumbnailImageUrl": {
+            "type": "string",
+            "description": "상품 썸네일 이미지 URL"
+          },
+          "imageUrls": {
+            "description": "상품 이미지 URL 리스트",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "saleStartDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "상품 판매 시작 일시",
+            "nullable": true
+          },
+          "saleEndDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "상품 판매 종료 일시",
+            "nullable": true
+          },
+          "accumulationPoint": {
+            "type": "number",
+            "description": "적립포인트"
+          },
+          "deliveryFeeType": {
+            "type": "string",
+            "enum": [
+              "FREE",
+              "PAID",
+              "CONDITIONAL"
+            ],
+            "description": "배송비 유형"
+          },
+          "totalReviewCount": {
+            "type": "number",
+            "description": "상품의 총 리뷰 수"
+          },
+          "averageReviewRating": {
+            "type": "number",
+            "description": "상품 평균 리뷰 평점"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "partnerName",
+          "saleStatus",
+          "regularPrice",
+          "salePrice",
+          "stockQuantity",
+          "stockStatus",
+          "thumbnailImageUrl",
+          "imageUrls",
+          "saleStartDate",
+          "saleEndDate",
+          "accumulationPoint",
+          "deliveryFeeType",
+          "totalReviewCount",
+          "averageReviewRating"
+        ]
+      },
+      "ExhibitionTabResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "탭 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "탭 이름"
+          },
+          "products": {
+            "description": "상품 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExhibitionProductResponseDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "products"
+        ]
+      },
+      "ExhibitionContentResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "콘텐츠 URL"
+          },
+          "uploadMethod": {
+            "type": "string",
+            "enum": [
+              "FILE",
+              "EXTERNAL_URL"
+            ],
+            "description": "업로드 방법 (파일 또는 외부 URL)"
+          }
+        },
+        "required": [
+          "url",
+          "uploadMethod"
+        ]
+      },
+      "GetExhibitionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "전시 ID"
+          },
+          "tenantId": {
+            "type": "number",
+            "description": "테넌트 ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "전시 이름"
+          },
+          "marketingCopy": {
+            "type": "string",
+            "description": "마케팅 문구"
+          },
+          "isAlwaysDisplayed": {
+            "type": "boolean",
+            "description": "상시 노출 여부"
+          },
+          "startDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "전시 시작일",
+            "nullable": true
+          },
+          "endDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "전시 종료일",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "담당자"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "전시 생성일"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "IN_PROGRESS",
+              "FINISHED"
+            ],
+            "description": "전시 상태"
+          },
+          "tabs": {
+            "description": "전시 탭 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExhibitionTabResponseDto"
+            }
+          },
+          "mainContent": {
+            "description": "메인 콘텐츠",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExhibitionContentResponseDto"
+              }
+            ]
+          },
+          "topContent": {
+            "description": "상단 콘텐츠",
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ExhibitionContentResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "tenantId",
+          "name",
+          "marketingCopy",
+          "isAlwaysDisplayed",
+          "startDate",
+          "endDate",
+          "createdBy",
+          "createdAt",
+          "status",
+          "tabs",
+          "mainContent",
+          "topContent"
+        ]
+      },
+      "GetExhibitionTabResponseDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "탭 이름"
+          },
+          "exhibitionName": {
+            "type": "string",
+            "description": "기획전 이름"
+          },
+          "exhibitionMarketingCopy": {
+            "type": "string",
+            "description": "기획전 홍보 문구"
+          },
+          "products": {
+            "description": "상품 목록",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExhibitionProductResponseDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "exhibitionName",
+          "exhibitionMarketingCopy",
+          "products"
+        ]
+      },
+      "GetExhibitionTabWithProductsResponseDto": {
+        "type": "object",
+        "properties": {
+          "exhibitionTabCount": {
+            "type": "number",
+            "description": "기획전 탭 전체 수",
+            "nullable": true
+          },
+          "exhibitionTab": {
+            "description": "기획전 탭",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetExhibitionTabResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "exhibitionTab"
+        ]
+      }
+    }
+  }
+}

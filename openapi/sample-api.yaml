@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  title: Sample Test API
+  version: 1.0.0
+  description: Sample API for testing OpenAPI integration
+
+paths:
+  /api/users:
+    get:
+      tags:
+        - User Management
+      summary: Get all users
+      operationId: listUsers
+      responses:
+        '200':
+          description: Successful response
+    post:
+      tags:
+        - User Management
+      summary: Create a new user
+      operationId: createUser
+      responses:
+        '201':
+          description: User created
+
+  /api/products:
+    get:
+      tags:
+        - Product Management
+      summary: Get all products
+      operationId: listProducts
+      responses:
+        '200':
+          description: Successful response
+    post:
+      tags:
+        - Product Management
+      summary: Create a new product
+      operationId: createProduct
+      responses:
+        '201':
+          description: Product created
+
+  /api/orders:
+    get:
+      tags:
+        - Order Processing
+      summary: Get all orders
+      operationId: listOrders
+      responses:
+        '200':
+          description: Successful response
+    post:
+      tags:
+        - Order Processing
+      summary: Create a new order
+      operationId: createOrder
+      responses:
+        '201':
+          description: Order created
+
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      operationId: login
+      responses:
+        '200':
+          description: Login successful
+
+  /api/auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: User registration
+      operationId: register
+      responses:
+        '201':
+          description: Registration successful
