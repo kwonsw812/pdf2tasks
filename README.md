@@ -466,4 +466,4 @@ MIT License
 
 ## 연락처
 
-프로젝트 관련 문의: [GitHub Issues](https://github.com/...)
+프로젝트 관련 문의: [GitHub Issues](https://github.com/kwonsw812/pdf2tasks/issues)
